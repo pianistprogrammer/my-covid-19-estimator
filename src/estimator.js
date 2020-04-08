@@ -11,11 +11,15 @@ export const input = {
   population: 66622705,
   totalHospitalBeds: 1380614
 };
-const estimateCurrentlyInfected = (data = input) => {
-  this.data = data;
-  this.impact.currentlyInfected = data.reportedCases * 10;
-  this.severeImpact.currentlyInfected = data.reportedCases * 50;
-};
+const estimateCurrentlyInfected = (data = input) => ({
+  data: input,
+  impact: {
+    currentlyInfected: data.reportedCases * 10
+  },
+  severeImpact: {
+    currentlyInfected: data.reportedCases * 50
+  }
+});
 const estimateProjectedInfections = (data = input) => {
   const estimate = estimateCurrentlyInfected();
   const estimatedImpact = estimate.impact.currentlyInfected;
