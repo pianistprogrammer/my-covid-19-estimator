@@ -13,7 +13,7 @@ export const input = {
 };
 const estimateCurrentlyInfected = (data = input) => {
   this.data = data;
-  this.impact.currentlyInfected = data.data.reportedCases * 10;
+  this.impact.currentlyInfected = data.reportedCases * 10;
   this.severeImpact.currentlyInfected = data.reportedCases * 50;
 };
 const estimateProjectedInfections = (data = input) => {
