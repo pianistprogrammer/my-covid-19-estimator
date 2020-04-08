@@ -19,6 +19,6 @@ module.exports = {
   rules: {
     "comma-dangle": ["error", "never"],
     "no-param-reassign": ["error", { "props": false }],
-    "max-line-length": [true, 240]
+    "max-line-length": [0]
   },
 };
