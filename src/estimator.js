@@ -1,13 +1,7 @@
 const estimateCurrentlyInfected = (data) => {
-    return {
-        data: data,
-        impact: {
-            currentlyInfected: data.reportedCases * 10
-        },
-        severeImpact: {
-            currentlyInfected: data.reportedCases * 50
-        }
-    }
+    this.data = data;
+    this.impact.currentlyInfected = data.data.reportedCases * 10;
+    this.severeImpact.currentlyInfected = data.reportedCases * 50
 };
 const estimateProjectedInfections = (data) => {
     const currentlyInfectedEstimate = estimateCurrentlyInfected();
@@ -16,10 +10,10 @@ const estimateProjectedInfections = (data) => {
         return {
             data: data,
             impact: {
-                infectionsByRequestedTime: currentlyInfectedEstimate.impact.currentlyInfected * Math.floor(Math.pow(2, 0.3))
+                infectionsByRequestedTime: currentlyInfectedEstimate.impact.currentlyInfected * Math.floor(2 ** 0.3)
             },
             severeImpact: {
-                infectionsByRequestedTime: currentlyInfectedEstimate.severeImpact.currentlyInfected * Math.floor(Math.pow(2, 0.3))
+                infectionsByRequestedTime: currentlyInfectedEstimate.severeImpact.currentlyInfected * Math.floor(2 ** 0.3)
             }
         }
     }
@@ -30,7 +24,7 @@ const estimateProjectedInfections = (data) => {
                 infectionsByRequestedTime: currentlyInfectedEstimate.impact.currentlyInfected * Math.floor(2 ** 0.3 * 7)
             },
             severeImpact: {
-                infectionsByRequestedTime: currentlyInfectedEstimate.severeImpact.currentlyInfected * Math.floor(Math.pow(2, 0.3) * 7)
+                infectionsByRequestedTime: currentlyInfectedEstimate.severeImpact.currentlyInfected * Math.floor(2 ** 0.3 * 7)
             }
         }
     }
@@ -38,10 +32,10 @@ const estimateProjectedInfections = (data) => {
         return {
             data: data,
             impact: {
-                infectionsByRequestedTime: currentlyInfectedEstimate.impact.currentlyInfected * Math.floor(Math.pow(2, 0.3) * 30)
+                infectionsByRequestedTime: currentlyInfectedEstimate.impact.currentlyInfected * Math.floor(2 ** 0.3 * 30)
             },
             severeImpact: {
-                infectionsByRequestedTime: currentlyInfectedEstimate.severeImpact.currentlyInfected * Math.floor(Math.pow(2, 0.3) * 30)
+                infectionsByRequestedTime: currentlyInfectedEstimate.severeImpact.currentlyInfected * Math.floor(2 ** 0.3 * 30)
             }
         }
     }
@@ -57,7 +51,7 @@ const estimateSevereCases = (data) => {
             severeCasesByRequestedTime: projectedInfections.severeImpact.infectionsByRequestedTime * 0.15
 
         }
-    }
+    };
 };
 const estimatedBedspaceAvailability = (data) => {
     const availability = estimateSevereCases();
