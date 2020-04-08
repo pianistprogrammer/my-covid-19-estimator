@@ -1,49 +1,49 @@
 const estimateCurrentlyInfected = (data) => {
     this.data = data;
     this.impact.currentlyInfected = data.data.reportedCases * 10;
-    this.severeImpact.currentlyInfected = data.reportedCases * 50
+    this.severeImpact.currentlyInfected = data.reportedCases * 50;
 };
 const estimateProjectedInfections = (data) => {
-    const currentlyInfectedEstimate = estimateCurrentlyInfected();
+    const estimate = estimateCurrentlyInfected();
+    const estimatedImpact = estimate.impact.currentlyInfected;
+    const severeEstimatedImpact = estimate.severeImpact.currentlyInfected;
     const { periodType } = data;
     if (periodType === 'days') {
         return {
             data: data,
             impact: {
-                infectionsByRequestedTime: currentlyInfectedEstimate.impact.currentlyInfected * Math.floor(2 ** 0.3)
+                infectionsByRequestedTime: estimatedImpact * Math.floor(2 ** 0.3)
             },
             severeImpact: {
-                infectionsByRequestedTime: currentlyInfectedEstimate.severeImpact.currentlyInfected * Math.floor(2 ** 0.3)
+                infectionsByRequestedTime: severeEstimatedImpact * Math.floor(2 ** 0.3)
             }
-        }
+        };
     }
-    else if (periodType === 'weeks') {
+    if (periodType === 'weeks') {
         return {
             data: data,
             impact: {
-                infectionsByRequestedTime: currentlyInfectedEstimate.impact.currentlyInfected * Math.floor(2 ** 0.3 * 7)
+                infectionsByRequestedTime: estimatedImpact * Math.floor((2 ** 0.3) * 7)
             },
             severeImpact: {
-                infectionsByRequestedTime: currentlyInfectedEstimate.severeImpact.currentlyInfected * Math.floor(2 ** 0.3 * 7)
+                infectionsByRequestedTime: severeEstimatedImpact * Math.floor((2 ** 0.3) * 7)
             }
-        }
+        };
     }
-    else {
-        return {
-            data: data,
-            impact: {
-                infectionsByRequestedTime: currentlyInfectedEstimate.impact.currentlyInfected * Math.floor(2 ** 0.3 * 30)
-            },
-            severeImpact: {
-                infectionsByRequestedTime: currentlyInfectedEstimate.severeImpact.currentlyInfected * Math.floor(2 ** 0.3 * 30)
-            }
+    return {
+        data: data,
+        impact: {
+            infectionsByRequestedTime: estimatedImpact * Math.floor((2 ** 0.3) * 30)
+        },
+        severeImpact: {
+            infectionsByRequestedTime: severeEstimatedImpact * Math.floor((2 ** 0.3) * 30)
         }
-    }
+    };
 };
 const estimateSevereCases = (data) => {
     const projectedInfections = estimateProjectedInfections();
     return {
-        data: data,
+        data,
         impact: {
             severeCasesByRequestedTime: projectedInfections.impact.infectionsByRequestedTime * 0.15
         },
@@ -54,28 +54,30 @@ const estimateSevereCases = (data) => {
     };
 };
 const estimatedBedspaceAvailability = (data) => {
-    const availability = estimateSevereCases();
+    const avail = estimateSevereCases();
+    const bedImpact = avail.impact.severeCasesByRequestedTime;
+    const bedSevereImpact = avail.severeImpact.severeCasesByRequestedTime;
     return {
         data: data,
         impact: {
-            hospitalBedsByRequestedTime: 0.35 * data.totalHospitalBeds - availability.impact.severeCasesByRequestedTime
+            hospitalBedsByRequestedTime: 0.35 * data.totalHospitalBeds - bedImpact
         },
         severeImpact: {
-            hospitalBedsByRequestedTime: data.totalHospitalBeds * 512 - availability.impact.severeCasesByRequestedTime
+            hospitalBedsByRequestedTime: data.totalHospitalBeds * 512 - bedSevereImpact
         }
-    }
+    };
 };
 const covid19ImpactEstimator = (data) => {
     const estimator = chain(
 
-        //Challenge 1
+        // Challenge 1
         estimateCurrentlyInfected,
         estimateProjectedInfections,
 
         // Challenge 2
         estimateSevereCases,
         estimatedBedspaceAvailability
-    )
+    );
     return estimator({
         data: {},
         impact: {},
