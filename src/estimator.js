@@ -1,4 +1,4 @@
-const input = {
+export const input = {
   region: {
     name: 'Africa',
     avgAge: 19.7,
@@ -23,7 +23,7 @@ const estimateProjectedInfections = (data = input) => {
   const { periodType } = data;
   if (periodType === 'days') {
     return {
-      data,
+      data: input,
       impact: {
         infectionsByRequestedTime: estimatedImpact * Math.floor(2 ** 0.3)
       },
@@ -34,7 +34,7 @@ const estimateProjectedInfections = (data = input) => {
   }
   if (periodType === 'weeks') {
     return {
-      data,
+      data: input,
       impact: {
         infectionsByRequestedTime: estimatedImpact * Math.floor((2 ** 0.3) * 7)
       },
@@ -44,7 +44,7 @@ const estimateProjectedInfections = (data = input) => {
     };
   }
   return {
-    data,
+    data: input,
     impact: {
       infectionsByRequestedTime: estimatedImpact * Math.floor((2 ** 0.3) * 30)
     },
