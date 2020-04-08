@@ -68,20 +68,9 @@ const estimatedBedspaceAvailability = (data) => {
   };
 };
 const covid19ImpactEstimator = (data) => {
-  const estimator = chain(
-
-    // Challenge 1
-    estimateCurrentlyInfected,
-    estimateProjectedInfections,
-
-    // Challenge 2
-    estimateSevereCases,
-    estimatedBedspaceAvailability
-  );
-  return estimator({
-    data: {},
-    impact: {},
-    severeImpact: {}
-  });
+  estimateCurrentlyInfected(data);
+  estimateProjectedInfections(data);
+  estimateSevereCases(data);
+  estimatedBedspaceAvailability(data);
 };
 export default covid19ImpactEstimator;
