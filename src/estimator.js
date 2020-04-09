@@ -57,10 +57,10 @@ const estimateProjectedInfections = (data = input) => {
     }
   };
 };
-const estimateSevereCases = (data = input) => {
+const estimateSevereCases = () => {
   const projectedInfections = estimateProjectedInfections();
   return {
-    data,
+    data: input,
     impact: {
       severeCasesByRequestedTime: projectedInfections.impact.infectionsByRequestedTime * 0.15
     },
@@ -84,6 +84,74 @@ const estimatedBedspaceAvailability = (data = input) => {
     }
   };
 };
+const estimateCasesForICU = () => {
+  const icuCases = estimateCurrentlyInfected();
+  const icuImpact = icuCases.impact.infectionsByRequestedTime;
+  const icuSevereImpact = icuCases.severeImpact.infectionsByRequestedTime;
+  return {
+    data: input,
+    impact: {
+      casesForICUByRequestedTime: 0.05 * icuImpact
+    },
+    severeImpact: {
+      casesForICUByRequestedTime: 0.05 * icuSevereImpact
+    }
+  };
+};
+const estimateCasesForVentilators = () => {
+  const ventilatorsCases = estimateProjectedInfections();
+  const ventilatorImpact = ventilatorsCases.impact.infectionsByRequestedTime;
+  const ventilatorSevereImpact = ventilatorsCases.severeImpact.infectionsByRequestedTime;
+  return {
+    data: input,
+    impact: {
+      casesForICUByRequestedTime: 0.02 * ventilatorImpact
+    },
+    severeImpact: {
+      casesForICUByRequestedTime: 0.02 * ventilatorSevereImpact
+    }
+  };
+};
+const estimateDollarsInFlight = (data = input) => {
+  const estimateInfectionPerTime = estimateProjectedInfections();
+  const dollarsInFlightImpact = estimateInfectionPerTime.impact.infectionsByRequestedTime;
+  const dollarsInFlightSevereImpact = estimateInfectionPerTime.impact.infectionsByRequestedTime;
+  const avgIncome = data.region.avgDailyIncomePopulation;
+  const avgIncomeDollar = data.region.avgDailyIncomeInUSD;
+  const avgIncomePercentage = (avgIncome / data.population) * 100;
+  const { periodType } = data;
+  if (periodType === 'days') {
+    return {
+      data: input,
+      impact: {
+        dollarsInFlight: dollarsInFlightImpact * avgIncomePercentage * avgIncomeDollar
+      },
+      severeImpact: {
+        dollarsInFlight: dollarsInFlightSevereImpact * avgIncomePercentage * avgIncomeDollar
+      }
+    };
+  }
+  if (periodType === 'weeks') {
+    return {
+      data: input,
+      impact: {
+        dollarsInFlight: dollarsInFlightImpact * avgIncomePercentage * avgIncomeDollar * 7
+      },
+      severeImpact: {
+        dollarsInFlight: dollarsInFlightSevereImpact * avgIncomePercentage * avgIncomeDollar * 7
+      }
+    };
+  }
+  return {
+    data: input,
+    impact: {
+      dollarsInFlight: dollarsInFlightImpact * avgIncomePercentage * avgIncomeDollar * 30
+    },
+    severeImpact: {
+      dollarsInFlight: dollarsInFlightSevereImpact * avgIncomePercentage * avgIncomeDollar * 30
+    }
+  };
+};
 const covid19ImpactEstimator = (data) => {
   // challenge one
   estimateCurrentlyInfected(data);
@@ -92,5 +160,10 @@ const covid19ImpactEstimator = (data) => {
   // Challenge two
   estimateSevereCases(data);
   estimatedBedspaceAvailability(data);
+
+  // Challenge three
+  estimateCasesForICU();
+  estimateCasesForVentilators();
+  estimateDollarsInFlight(data);
 };
 export default covid19ImpactEstimator;
