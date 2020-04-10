@@ -25,37 +25,70 @@ const estimateProjectedInfections = (data = input) => {
   const estimatedImpact = estimate.impact.currentlyInfected;
   const severeEstimatedImpact = estimate.severeImpact.currentlyInfected;
   const { periodType } = data;
-  if (periodType === 'days') {
-    return {
-      data: input,
-      impact: {
-        infectionsByRequestedTime: estimatedImpact * Math.floor(2 ** 0.3)
-      },
-      severeImpact: {
-        infectionsByRequestedTime: severeEstimatedImpact * Math.floor(2 ** 0.3)
-      }
-    };
+  switch (periodType) {
+    case 'days':
+      return {
+        data: input,
+        impact: {
+          infectionsByRequestedTime: estimatedImpact * Math.floor(2 ** (1.0 / 3))
+        },
+        severeImpact: {
+          infectionsByRequestedTime: severeEstimatedImpact * Math.floor(2 ** (1.0 / 3))
+        }
+      };
+    case 'weeks':
+      return {
+        data: input,
+        impact: {
+          infectionsByRequestedTime: estimatedImpact * Math.floor(2 ** (7.0 / 3))
+        },
+        severeImpact: {
+          infectionsByRequestedTime: severeEstimatedImpact * Math.floor(2 ** (7.0 / 3))
+        }
+      };
+    default:
+      return {
+        data: input,
+        impact: {
+          infectionsByRequestedTime: estimatedImpact * Math.floor(2 ** (30.0 / 3))
+        },
+        severeImpact: {
+          infectionsByRequestedTime: severeEstimatedImpact * Math.floor(2 ** (3.0 / 3))
+        }
+      };
   }
-  if (periodType === 'weeks') {
-    return {
-      data: input,
-      impact: {
-        infectionsByRequestedTime: estimatedImpact * Math.floor((2 ** 0.3) * 7)
-      },
-      severeImpact: {
-        infectionsByRequestedTime: severeEstimatedImpact * Math.floor((2 ** 0.3) * 7)
-      }
-    };
-  }
-  return {
-    data: input,
-    impact: {
-      infectionsByRequestedTime: estimatedImpact * Math.floor((2 ** 0.3) * 30)
-    },
-    severeImpact: {
-      infectionsByRequestedTime: severeEstimatedImpact * Math.floor((2 ** 0.3) * 30)
-    }
-  };
+
+  // if (periodType === 'days') {
+  //   return {
+  //     data: input,
+  //     impact: {
+  //       infectionsByRequestedTime: estimatedImpact * Math.floor(2 ** 0.3)
+  //     },
+  //     severeImpact: {
+  //       infectionsByRequestedTime: severeEstimatedImpact * Math.floor(2 ** 0.3)
+  //     }
+  //   };
+  // }
+  // if (periodType === 'weeks') {
+  //   return {
+  //     data: input,
+  //     impact: {
+  //       infectionsByRequestedTime: estimatedImpact * Math.floor((2 ** 0.3) * 7)
+  //     },
+  //     severeImpact: {
+  //       infectionsByRequestedTime: severeEstimatedImpact * Math.floor((2 ** 0.3) * 7)
+  //     }
+  //   };
+  // }
+  // return {
+  //   data: input,
+  //   impact: {
+  //     infectionsByRequestedTime: estimatedImpact * Math.floor((2 ** 0.3) * 30)
+  //   },
+  //   severeImpact: {
+  //     infectionsByRequestedTime: severeEstimatedImpact * Math.floor((2 ** 0.3) * 30)
+  //   }
+  // };
 };
 const estimateSevereCases = () => {
   const projectedInfections = estimateProjectedInfections();
