@@ -185,7 +185,8 @@ const estimateDollarsInFlight = (data) => {
     }
   };
 };
-const covid19ImpactEstimator = function () {
+
+function covid19ImpactEstimator() {
 // challenge one
   this.estimateCurrentlyInfected = estimateCurrentlyInfected;
   this.estimateProjectedInfections = estimateProjectedInfections;
@@ -198,11 +199,5 @@ const covid19ImpactEstimator = function () {
   this.estimateCasesForICU = estimateCasesForICU;
   this.estimateCasesForVentilators = estimateCasesForVentilators;
   this.estimateDollarsInFlight = estimateDollarsInFlight;
-};
+}
 module.exports = covid19ImpactEstimator;
-
-
-
-// const estimator = new covid19ImpactEstimator();
-
-// console.log(estimator);
