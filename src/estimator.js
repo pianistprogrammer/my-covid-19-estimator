@@ -1,4 +1,4 @@
-export const input = {
+const input = {
   region: {
     name: 'Africa',
     avgAge: 19.7,
@@ -11,8 +11,8 @@ export const input = {
   population: 66622705,
   totalHospitalBeds: 1380614
 };
-const estimateCurrentlyInfected = (data = input) => ({
-  data: input,
+const estimateCurrentlyInfected = (data) => ({
+  data,
   impact: {
     currentlyInfected: data.reportedCases * 10
   },
@@ -20,15 +20,15 @@ const estimateCurrentlyInfected = (data = input) => ({
     currentlyInfected: data.reportedCases * 50
   }
 });
-const estimateProjectedInfections = (data = input) => {
-  const estimate = estimateCurrentlyInfected();
+const estimateProjectedInfections = (data) => {
+  const estimate = estimateCurrentlyInfected(data);
   const estimatedImpact = estimate.impact.currentlyInfected;
   const severeEstimatedImpact = estimate.severeImpact.currentlyInfected;
   const { periodType } = data;
   switch (periodType) {
     case 'days':
       return {
-        data: input,
+        data,
         impact: {
           infectionsByRequestedTime: estimatedImpact * Math.floor(2 ** (1.0 / 3))
         },
@@ -38,7 +38,7 @@ const estimateProjectedInfections = (data = input) => {
       };
     case 'weeks':
       return {
-        data: input,
+        data,
         impact: {
           infectionsByRequestedTime: estimatedImpact * Math.floor(2 ** (7.0 / 3))
         },
@@ -48,7 +48,7 @@ const estimateProjectedInfections = (data = input) => {
       };
     default:
       return {
-        data: input,
+        data,
         impact: {
           infectionsByRequestedTime: estimatedImpact * Math.floor(2 ** (30.0 / 3))
         },
@@ -90,10 +90,10 @@ const estimateProjectedInfections = (data = input) => {
   //   }
   // };
 };
-const estimateSevereCases = () => {
-  const projectedInfections = estimateProjectedInfections();
+const estimateSevereCases = (data) => {
+  const projectedInfections = estimateProjectedInfections(data);
   return {
-    data: input,
+    data,
     impact: {
       severeCasesByRequestedTime: projectedInfections.impact.infectionsByRequestedTime * 0.15
     },
@@ -103,8 +103,8 @@ const estimateSevereCases = () => {
     }
   };
 };
-const estimatedBedspaceAvailability = (data = input) => {
-  const avail = estimateSevereCases();
+const estimatedBedspaceAvailability = (data) => {
+  const avail = estimateSevereCases(data);
   const bedImpact = avail.impact.severeCasesByRequestedTime;
   const bedSevereImpact = avail.severeImpact.severeCasesByRequestedTime;
   return {
@@ -117,12 +117,12 @@ const estimatedBedspaceAvailability = (data = input) => {
     }
   };
 };
-const estimateCasesForICU = () => {
-  const icuCases = estimateCurrentlyInfected();
+const estimateCasesForICU = (data) => {
+  const icuCases = estimateCurrentlyInfected(data);
   const icuImpact = icuCases.impact.infectionsByRequestedTime;
   const icuSevereImpact = icuCases.severeImpact.infectionsByRequestedTime;
   return {
-    data: input,
+    data,
     impact: {
       casesForICUByRequestedTime: 0.05 * icuImpact
     },
@@ -131,12 +131,12 @@ const estimateCasesForICU = () => {
     }
   };
 };
-const estimateCasesForVentilators = () => {
-  const ventilatorsCases = estimateProjectedInfections();
+const estimateCasesForVentilators = (data) => {
+  const ventilatorsCases = estimateProjectedInfections(data);
   const ventilatorImpact = ventilatorsCases.impact.infectionsByRequestedTime;
   const ventilatorSevereImpact = ventilatorsCases.severeImpact.infectionsByRequestedTime;
   return {
-    data: input,
+    data,
     impact: {
       casesForICUByRequestedTime: 0.02 * ventilatorImpact
     },
@@ -145,8 +145,8 @@ const estimateCasesForVentilators = () => {
     }
   };
 };
-const estimateDollarsInFlight = (data = input) => {
-  const estimateInfectionPerTime = estimateProjectedInfections();
+const estimateDollarsInFlight = (data) => {
+  const estimateInfectionPerTime = estimateProjectedInfections(data);
   const dollarsInFlightImpact = estimateInfectionPerTime.impact.infectionsByRequestedTime;
   const dollarsInFlightSevereImpact = estimateInfectionPerTime.impact.infectionsByRequestedTime;
   const avgIncome = data.region.avgDailyIncomePopulation;
@@ -155,7 +155,7 @@ const estimateDollarsInFlight = (data = input) => {
   const { periodType } = data;
   if (periodType === 'days') {
     return {
-      data: input,
+      data,
       impact: {
         dollarsInFlight: dollarsInFlightImpact * avgIncomePercentage * avgIncomeDollar
       },
@@ -166,7 +166,7 @@ const estimateDollarsInFlight = (data = input) => {
   }
   if (periodType === 'weeks') {
     return {
-      data: input,
+      data,
       impact: {
         dollarsInFlight: dollarsInFlightImpact * avgIncomePercentage * avgIncomeDollar * 7
       },
@@ -176,7 +176,7 @@ const estimateDollarsInFlight = (data = input) => {
     };
   }
   return {
-    data: input,
+    data,
     impact: {
       dollarsInFlight: dollarsInFlightImpact * avgIncomePercentage * avgIncomeDollar * 30
     },
@@ -185,18 +185,24 @@ const estimateDollarsInFlight = (data = input) => {
     }
   };
 };
-const covid19ImpactEstimator = (data) => {
-  // challenge one
-  estimateCurrentlyInfected(data);
-  estimateProjectedInfections(data);
+const covid19ImpactEstimator = function () {
+// challenge one
+  this.estimateCurrentlyInfected = estimateCurrentlyInfected;
+  this.estimateProjectedInfections = estimateProjectedInfections;
 
-  // Challenge two
-  estimateSevereCases(data);
-  estimatedBedspaceAvailability(data);
+  // // Challenge two
+  this.estimateSevereCases = estimateSevereCases;
+  this.estimatedBedspaceAvailability = estimatedBedspaceAvailability;
 
-  // Challenge three
-  estimateCasesForICU();
-  estimateCasesForVentilators();
-  estimateDollarsInFlight(data);
+  // // Challenge three
+  this.estimateCasesForICU = estimateCasesForICU;
+  this.estimateCasesForVentilators = estimateCasesForVentilators;
+  this.estimateDollarsInFlight = estimateDollarsInFlight;
 };
-export default covid19ImpactEstimator;
+module.exports = covid19ImpactEstimator;
+
+
+
+// const estimator = new covid19ImpactEstimator();
+
+// console.log(estimator);
