@@ -1,16 +1,16 @@
-// const input = {
-//   region: {
-//     name: 'Africa',
-//     avgAge: 19.7,
-//     avgDailyIncomeInUSD: 5,
-//     avgDailyIncomePopulation: 0.71
-//   },
-//   periodType: 'days',
-//   timeToElapse: 58,
-//   reportedCases: 674,
-//   population: 66622705,
-//   totalHospitalBeds: 1380614
-// };
+const input = {
+  region: {
+    name: 'Africa',
+    avgAge: 19.7,
+    avgDailyIncomeInUSD: 5,
+    avgDailyIncomePopulation: 0.71
+  },
+  periodType: 'days',
+  timeToElapse: 58,
+  reportedCases: 674,
+  population: 66622705,
+  totalHospitalBeds: 1380614
+};
 const estimateCurrentlyInfected = (data) => ({
   data,
   impact: {
@@ -57,38 +57,6 @@ const estimateProjectedInfections = (data) => {
         }
       };
   }
-
-  // if (periodType === 'days') {
-  //   return {
-  //     data: input,
-  //     impact: {
-  //       infectionsByRequestedTime: estimatedImpact * Math.floor(2 ** 0.3)
-  //     },
-  //     severeImpact: {
-  //       infectionsByRequestedTime: severeEstimatedImpact * Math.floor(2 ** 0.3)
-  //     }
-  //   };
-  // }
-  // if (periodType === 'weeks') {
-  //   return {
-  //     data: input,
-  //     impact: {
-  //       infectionsByRequestedTime: estimatedImpact * Math.floor((2 ** 0.3) * 7)
-  //     },
-  //     severeImpact: {
-  //       infectionsByRequestedTime: severeEstimatedImpact * Math.floor((2 ** 0.3) * 7)
-  //     }
-  //   };
-  // }
-  // return {
-  //   data: input,
-  //   impact: {
-  //     infectionsByRequestedTime: estimatedImpact * Math.floor((2 ** 0.3) * 30)
-  //   },
-  //   severeImpact: {
-  //     infectionsByRequestedTime: severeEstimatedImpact * Math.floor((2 ** 0.3) * 30)
-  //   }
-  // };
 };
 const estimateSevereCases = (data) => {
   const projectedInfections = estimateProjectedInfections(data);
@@ -186,18 +154,18 @@ const estimateDollarsInFlight = (data) => {
   };
 };
 
-function covid19ImpactEstimator() {
+function covid19ImpactEstimator(data) {
 // challenge one
-  this.estimateCurrentlyInfected = estimateCurrentlyInfected;
-  this.estimateProjectedInfections = estimateProjectedInfections;
+  this.estimateCurrentlyInfected = estimateCurrentlyInfected(data);
+  this.estimateProjectedInfections = estimateProjectedInfections(data);
 
   // // Challenge two
-  this.estimateSevereCases = estimateSevereCases;
-  this.estimatedBedspaceAvailability = estimatedBedspaceAvailability;
+  this.estimateSevereCases = estimateSevereCases(data);
+  this.estimatedBedspaceAvailability = estimatedBedspaceAvailability(data);
 
   // // Challenge three
-  this.estimateCasesForICU = estimateCasesForICU;
-  this.estimateCasesForVentilators = estimateCasesForVentilators;
-  this.estimateDollarsInFlight = estimateDollarsInFlight;
+  this.estimateCasesForICU = estimateCasesForICU(data);
+  this.estimateCasesForVentilators = estimateCasesForVentilators(data);
+  this.estimateDollarsInFlight = estimateDollarsInFlight(data);
 }
 module.exports = covid19ImpactEstimator;
