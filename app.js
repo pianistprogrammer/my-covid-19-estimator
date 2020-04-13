@@ -2,6 +2,8 @@ const express = require('express');
 const fs = require('fs');
 const path = require('path');
 
+const filePath = path.join(__dirname, 'audit.log');
+
 const app = express();
 
 const morgan = require('morgan');
@@ -11,7 +13,7 @@ const estimatorRoutes = require('./src/backend/estimator');
 
 app.use(
   morgan(':method :url    :status  :response-time ms', {
-    stream: fs.createWriteStream(path.join(__dirname, 'logs.txt'), {
+    stream: fs.createWriteStream(filePath, {
       flags: 'a'
     })
   })
