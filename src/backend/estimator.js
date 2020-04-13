@@ -1,13 +1,10 @@
 const express = require('express');
 const fs = require('fs');
-const path = require('path');
+// const path = require('path');
 
 
 const router = express.Router();
 const estimator = require('../estimator');
-
-const filePath = path.join(__dirname, 'audit.log');
-
 
 const checkParameter = (res, parameter) => {
   if (parameter === 'json') {
@@ -66,7 +63,7 @@ router.post('/:optional', (req, res) => {
 
 router.get('/logs', (req, res) => {
   res.setHeader('Content-Type', 'text/plain');
-  fs.readFile(filePath, { encoding: 'utf-8' }, (err, data) => {
+  fs.readFile('./audit.log', { encoding: 'utf-8' }, (err, data) => {
     if (err) {
       res.status(500).send(err);
       return;
