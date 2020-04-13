@@ -12,7 +12,7 @@ const bodyParser = require('body-parser');
 const estimatorRoutes = require('./src/backend/estimator');
 
 app.use(
-  morgan(':method :url    :status  :response-time ms', {
+  morgan(':method :url :status :response-time ms', {
     stream: fs.createWriteStream(filePath, {
       flags: 'a'
     })
