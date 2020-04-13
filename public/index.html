@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="Description" content="A simple form to estimate COVID-19 impact">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="preload"
+        rel="stylesheet">
+    <link rel="stylesheet" href="css/bootstrap.min.css">
+    <link rel="stylesheet" href="css/style.css">
+    <title>Build For SDGs With Facebook and Andela</title>
+</head>
+
+<body>
+
+    <header class="header">
+        <h1>Build For SDGs</h1>
+        <img src="sdg-wheel_transparent_web_large.png" alt="SDG wheel logo" width="48" height="48">
+    </header>
+    <main>
+        <h2>COVID-19 Estimator</h2>
+        <form class="form">
+            <section class="form-section">
+                <div class="form-section-info">
+                    <h3>Estimate Settings</h4>
+                        <p>Get the estimated impact for this period.</p>
+                </div>
+                <div class="form-section-inputs">
+                    <div class="form-input">
+                        <label for="periodType">Period Type</label>
+                        <select name="periodType" id="periodType" data-period-type>
+                            <option value="days">days</option>
+                            <option value="weeks">weeks</option>
+                            <option value="months">months</option>
+                        </select>
+                    </div>
+            
+                </div>
+            </section>
+            <section class="form-section">
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-section-inputs">
+                            <div class="form-input">
+                                <label for="regionName">Name</label>
+                                <input onchange="alphanumeric(this)" type="text" id="regionName" name="regionName" data-region-name
+                                    placeholder="Ex. Africa" required>
+                            </div>
+                            <div class="form-input">
+                                <label for="regionAvgAge">Average Age</label>
+                                <input type="number" id="regionAvgAge" name="regionAvgAge" data-region-avgAge
+                                    placeholder="Ex. 17" required>
+                            </div>
+                            <div class="form-input">
+                                <label for="regionAvgDailyIncomeInUSD">Average Daily Income In USD</label>
+                                <input type="number" id="regionAvgDailyIncomeInUSD" data-region-avgDailyIncomeInUSD
+                                    placeholder="Ex. 5" required>
+                            </div>
+                            <div class="form-input">
+                                <label for="regionAvgDailyIncomePopulation">Percentage of Population With Average Daily
+                                    Income</label>
+                                <input type="number" id="regionAvgDailyIncomePopulation"
+                                    data-region-avgDailyIncomePopulation placeholder="Ex. 0.75 for 75%" required>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-section-inputs">
+                            <div class="form-input">
+                                <label for="reportedCases">Number of Reported Cases</label>
+                                <input type="number" id="reportedCases" name="reportedCases" placeholder="844"
+                                    data-reported-cases required>
+                            </div>
+                            <div class="form-input">
+                                <label for="population">Population</label>
+                                <input type="number" id="population" name="population" placeholder="3000000"
+                                    data-population required>
+                            </div>
+                            <div class="form-input">
+                                <label for="totalHospitalBeds">Total Number of Hospital Beds</label>
+                                <input type="number" id="totalHospitalBeds" name="totalHospitalBeds" placeholder="6000"
+                                    data-total-hospital-beds required>
+                            </div>
+                            <div class="form-input">
+                                <label for="timeToElapse">Time Elapsed</label>
+                                <input type="number" id="timeToElapse" name="timeToElapse" placeholder="15" data-time-to-elapse required>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section class="form-section text-center">
+                <button class="btn btn-success" data-go-estimate>Generate Impact</button>
+            </section>
+        </form>
+        <div class="result"></div>
+    </main>
+    <script src="js/jquery.min.js"></script>
+    <script src="js/bootstrap.min.js"></script>
+    <script src="js/script.js"></script>
+</body>
+
+</html>
