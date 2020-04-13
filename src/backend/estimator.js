@@ -60,15 +60,14 @@ router.post('/:optional', (req, res) => {
 });
 
 router.get('/logs', (req, res) => {
-  res.setHeader('Content-Type', 'application/text');
+  res.setHeader('Content-Type', 'text/plain');
 
-  fs.readFile('./logs.txt', (err, data) => {
+  fs.readFile('./logs.txt', { encoding: 'utf-8' }, (err, data) => {
     if (err) {
-      res.send(err);
+      res.status(500).send(err);
       return;
     }
     res.status(200).send(data);
   });
 });
-
 module.exports = router;
