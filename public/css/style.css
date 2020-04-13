@@ -1,7 +1,7 @@
 
         body {
             margin: 0 0;
-            background-color: #f5f9fd;
+            background-color: #e7eaed;
             font-family: 'Poppins', sans-serif;
         }
 
@@ -47,7 +47,7 @@
 
         .form-section-info p {
             width: 80%;
-            color: #537291;
+            color: #000;
         }
 
         .form-input {
@@ -118,8 +118,8 @@
 }
 .btn-success {
     color: #fff;
-    background-color: #28a745;
-    border-color: #28a745;
+    background-color: #607d8b;
+    border-color: #607d8b;
 }
         @media (max-width: 768px) {
             .form-section-info {
