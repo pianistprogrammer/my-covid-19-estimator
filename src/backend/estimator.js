@@ -12,7 +12,7 @@ const checkParameter = (res, parameter) => {
     return res.setHeader('Content-Type', 'application/xml');
   }
 
-  throw new Error('Check your url again');
+  throw new Error('Please cross-check your url, Something is wrong !');
 };
 
 const getEstimate = (req) => {
