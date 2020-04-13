@@ -1,12 +1,4 @@
 
-function alphanumeric(inputtxt) {
-  const Number = /^[0-9]+$/;
-  if ((inputtxt.value.match(Number))) {
-    alert('input only text');
-  }
-}
-alphanumeric();
-
 const form = document.querySelector('.form');
 
 form.addEventListener('submit', async (e) => {
