@@ -1,8 +1,12 @@
 const express = require('express');
 const fs = require('fs');
 const path = require('path');
+const helmet = require('helmet');
+
 
 const filePath = path.join(__dirname, 'audit.log');
+const accessLogStream = fs.createWriteStream(filePath, { flags: 'a' });
+
 
 const app = express();
 
@@ -11,17 +15,41 @@ const bodyParser = require('body-parser');
 
 const estimatorRoutes = require('./src/backend/estimator');
 
-app.use(
-  morgan(':method :url :status :response-time ms', {
-    stream: fs.createWriteStream(filePath, {
-      flags: 'a'
-    })
-  })
-);
-app.use(morgan('tiny'));
+// app.use(
+//   morgan(':method :url :status :response-time ms', {
+//     stream: fs.createWriteStream(filePath, {
+//       flags: 'a'
+//     })
+//   })
+// );
+// app.use(morgan('tiny'));
 
-app.use(bodyParser.urlencoded({ extended: false }));
+// app.use(bodyParser.urlencoded({ extended: false }));
+// app.use(bodyParser.json());
+
+app.use(helmet());
+const logger = morgan(
+  (tokens, req, res) => {
+    let responseTime = Math.ceil(tokens['response-time'](req, res))
+      .toString()
+      .padStart(2, 0);
+    responseTime = `${responseTime}ms`;
+    return [
+      tokens.method(req, res),
+      tokens.url(req, res),
+      tokens.status(req, res),
+      responseTime
+    ].join(' ');
+  },
+  {
+    stream: accessLogStream,
+    skip: (_, res) => res.statusCode === 404
+  }
+);
+app.use(logger);
 app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: false }));
+
 
 // Routes to handle requests
 app.use('/api/v1/on-covid-19', estimatorRoutes);
